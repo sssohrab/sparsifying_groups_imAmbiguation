@@ -1,6 +1,9 @@
 import torch
 import numpy as np
-####################################################
+import matplotlib.pyplot as plt
+
+
+#################### Sparsifying non-linearity #########################################
 def KBest(inp, k, dim=-1, shrink=False, ternarize=False, symmetric=True, convexified=False):
     """
     Keeps elements with k largest magnitudes at each appropriate tensor dimension and zeros the rest.
@@ -35,8 +38,7 @@ def KBest(inp, k, dim=-1, shrink=False, ternarize=False, symmetric=True, convexi
     return out
 
 
-########################################
-
+#################### Ambiguation tools #################################################
 ### Utilities to generate fake code values similar to original codes.
 ### They follow the complementary truncated Gaussian distribution.
 def estimate_lmda(code):
@@ -91,8 +93,8 @@ def ambiguate(code, k_prime):
     zs = zs.view(b, c, -1)[:,:,2::3]
     for j in range(c):
         for i in range(b):
-            ind_p = zs[i, j, torch.randperm(m - k)[0:k_prime - k]]
-            code[i, j, ind_p] =  generate_CTG((1, 1, k_prime - k), lmda[j], std[j])
+            ind_p = zs[i, j, torch.randperm(m - k)[0: int(k_prime) - k]]
+            code[i, j, ind_p] =  generate_CTG((1, 1,  int(k_prime) - k), lmda[j], std[j])
     return code    
 
 ### 
@@ -111,17 +113,18 @@ def random_guess(code, k):
             code[i, j, ind_p] = 0
     return code    
     
-    
-########################################################################################
-
-### Functions to calculate the rate
-
+#################### Functions to calculate the rate ###################################
 def calculate_KBytes(m, k, L):
+    """
+    Calculated the rate (in KBytes) of L code-maps of length m with sparsity k
+    """
     H = -(k/m) * np.log2((k/m)) - (1 - (k/m)) * np.log2(1 - (k/m))
     return H * m * L  /(8 * 1024)
     
-def calculate_psnr(m, k, L, im_size):
+def calculate_bpp(m, k, L, im_size):
+    """
+    Calculated the bits-per-pixel (in KBytes) of L code-maps of length m with sparsity k
+    """
     H = -(k/m) * np.log2((k/m)) - (1 - (k/m)) * np.log2(1 - (k/m))
     return H * m * L / np.prod(im_size)
-
 

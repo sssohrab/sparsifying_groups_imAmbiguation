@@ -2,7 +2,7 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 import numpy as np
-from Tools import KBest
+from tools import KBest
 #######################################################
 class downConvBlock_I(nn.Module):
     def __init__(self, in_size, out_size, scale_factor):
