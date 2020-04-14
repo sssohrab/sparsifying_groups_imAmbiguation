@@ -109,7 +109,7 @@ Can this system be attacked in a computationally efficient manner? This is a ver
 
 ## Logistics:
 
-Tested with PyTorch ``version = 1.0``. Also requires OpenCV to load images. To evaluate the reconstruction quality based on psnr and ssim, skimage library is used.
+Tested with PyTorch ``version = 1.4``. Also requires PIL to load images. To evaluate the reconstruction quality based on psnr and ssim, skimage library is used. For comparison with JPEG compression, the OpenCV library is used.
 
 ``trainGround.ipynb`` is used to train and save the network. This is then invoked in ``noiseLab.ipynb``, where ambiguation noise is added and the quality of reconstruction is tested.
 
