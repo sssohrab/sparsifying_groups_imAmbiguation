@@ -122,18 +122,23 @@ def imShow(img, idx=0):
     """
     if isinstance(img, np.ndarray):
         if len(img.shape) == 4:
-            img = img[idx, :, :, :]
+            (_, c, h, w) = img.shape
+            img = img[idx, :, :, :].reshape(c, h, w)
         
     if isinstance(img, torch.Tensor):
         if len(img.shape) == 4:
-            img = img[idx, :, :, :].detach().squeeze(0).cpu().numpy()
+            (_, c, h, w) = img.shape
+            img = img[idx, :, :, :].detach().squeeze(0).cpu().view(c, h, w).numpy()
+            print(img.shape)
         else:
-            img = img.detach().cpu().numpy()
+            (c, h, w) = img.shape
+            print(img.shape)
+            img = img.detach().cpu().view(c, h, w).numpy()
+            print(img.shape)
 
-    plt.figure()
-    if img.shape[0] == 3:
-        
+    plt.figure()    
+    if c == 3:
         plt.imshow(np.transpose(img, (1, 2, 0)), interpolation='nearest')
-    else:
+    elif c == 1:
         plt.imshow(img[0,:,:], interpolation='nearest')
     plt.show()     

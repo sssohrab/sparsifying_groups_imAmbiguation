@@ -64,20 +64,22 @@ class upConvBlock_I(nn.Module):
         self.out_size = out_size
         self.scale_factor = scale_factor
         #
-        self.up  = nn.Upsample(scale_factor=self.scale_factor, mode='bilinear')
+        self.up  = nn.Upsample(scale_factor=self.scale_factor, mode='bilinear', align_corners=False)
         self.resConv = nn.Conv2d(self.in_size, self.out_size, 1)
         self.conv1 = nn.Conv2d(self.in_size, self.out_size, 5, padding=2, stride=1)
+        self.gn = nn.GroupNorm(num_groups=1, num_channels=self.out_size)  # Does it help?
         self.conv2 = nn.Conv2d(self.out_size, self.out_size, 3, padding=1, stride=1)
-        self.bn    = nn.BatchNorm2d(num_features=self.out_size)
+        # self.bn    = nn.BatchNorm2d(num_features=self.out_size)  # BN is detrimental for up-sampling layers!
        # 
     def forward(self, x):
         x = self.up(x)
         res = self.resConv(x)
         x = self.conv1(x)
+        x = self.gn(x)
         x = F.leaky_relu(x)
         x = self.conv2(x)
         x = x + res
-        x = self.bn(x)
+        #x = self.bn(x)
         return x
 ###################################    
 class upConvBlock_II(nn.Module):
@@ -88,20 +90,22 @@ class upConvBlock_II(nn.Module):
         self.out_size = out_size
         self.scale_factor = scale_factor
         #
-        self.up  = nn.Upsample(scale_factor=self.scale_factor, mode='bilinear')
+        self.up  = nn.Upsample(scale_factor=self.scale_factor, mode='bilinear', align_corners=False)
         self.resConv = nn.Conv2d(self.in_size, self.out_size, 1)
         self.conv1 = nn.Conv2d(self.in_size, self.in_size, 3, padding=1, stride=1)
+        self.gn = nn.GroupNorm(num_groups=self.in_size, num_channels=self.in_size)  # Does it help?
         self.conv2 = nn.Conv2d(self.in_size, self.out_size, 1, padding=0, stride=1)
-        self.bn    = nn.BatchNorm2d(num_features=self.out_size)
+        #self.bn    = nn.BatchNorm2d(num_features=self.out_size)
        # 
     def forward(self, x):
         x = self.up(x)
         res = self.resConv(x)
         x = self.conv1(x)
+        x = self.gn(x)
         x = F.leaky_relu(x)
         x = self.conv2(x)
         x = x + res
-        x = self.bn(x)
+        #x = self.bn(x)
         return x
 ##################################
 class groupedLinearEncoder(nn.Module):
