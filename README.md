@@ -111,7 +111,7 @@ Can this system be attacked in a computationally efficient manner? This is a ver
 
 Tested with PyTorch ``version = 1.4``. Also requires PIL to load images. To evaluate the reconstruction quality based on psnr and ssim, skimage library is used. For comparison with JPEG compression, the OpenCV library is used.
 
-``trainGround.ipynb`` is a notebook  used to train and save the network. This is then invoked in ``noiseLab.ipynb``, where ambiguation noise is added and the quality of reconstruction is tested. A set of **pre-trained weights** for the CelebA database can be found [from this link](https://www.dropbox.com/s/m0gr7z4np28rb28/CelebA_filts40-40-40-40-40-10_scale1-2-1-2-1-2_codes20_dim512_k256_stmp1587121097.082492.pth?dl=0).
+``trainGround.ipynb`` is a notebook  used to train and save the network. This is then invoked in ``noiseLab.ipynb``, where ambiguation noise is added and the quality of reconstruction is tested. A set of **pre-trained weights** for the CelebA database can be found [from this link](https://www.dropbox.com/s/m0gr7z4np28rb28/CelebA_filts40-40-40-40-40-10_scale1-2-1-2-1-2_codes20_dim512_k256_stmp1587121097.082492.pth?dl=0). The training set from which this network was trained can be found in ``./dataset_splits/CelebA/CelebA_train.txt``.
 
 
 
